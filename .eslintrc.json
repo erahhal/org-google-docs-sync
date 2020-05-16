@@ -1,0 +1,26 @@
+{
+  "extends": ["eslint:recommended", "airbnb-base"],
+  "env": {
+    "browser": true
+  },
+  "plugins": [
+    "html"
+  ],
+  "rules": {
+    "brace-style": "off",
+    "arrow-parens": ["error", "as-needed"],
+    "new-cap": ["error", { "capIsNewExceptions": ["Polymer"] }],
+    "require-jsdoc": "off",
+    "indent": ["error", 2, {
+      "SwitchCase": 1
+    }],
+    "consistent-return": "off",
+    "no-underscore-dangle": "off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-mixed-operators": "off",
+    "quote-props": "off",
+    "class-methods-use-this": "off",
+    "no-plusplus": "off",
+    "max-len": ["error", 120]
+  }
+}

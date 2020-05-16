@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "name": "export-todos",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./index.js",
+    "debug": "node --inspect-brk ./index.js"
+  },
+  "devDependencies": {
+    "eslint": "^7.0.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-html": "^6.0.2",
+    "eslint-plugin-import": "^2.20.2"
+  },
+  "dependencies": {
+    "debounce": "^1.2.0",
+    "googleapis": "39"
+  }
+}
