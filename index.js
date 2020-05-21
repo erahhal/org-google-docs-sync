@@ -15,8 +15,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // time.
 const TOKEN_PATH = 'token.json';
 
-const resolveHome = filePath => {
-  if (filePath[0] === '~') {
+const resolveHome = filePath => { if (filePath[0] === '~') {
     return path.join(process.env.HOME, filePath.slice(1));
   }
   return filePath;
@@ -179,6 +178,7 @@ const updateDocument = async (oAuth2Client, name, docPath) => {
   }
 };
 
+// %s/<text:bookmark[^\/]*\/>//gc
 const exportToODT = async orgPath => {
   const absPath = path.resolve(resolveHome(orgPath));
   const command = `emacs ${absPath} --batch -f org-odt-export-to-odt --kill`;
@@ -191,9 +191,35 @@ const exportToODT = async orgPath => {
       if (stderr) {
         console.warn(stderr);
       }
-      const basePath = path.join(path.dirname(absPath), path.basename(absPath, path.extname(absPath)));
-      const outputPath = path.resolve(`${basePath}.odt`);
-      resolve(outputPath);
+      const absDir = path.dirname(absPath);
+      const baseName = path.join(absDir, path.basename(absPath, path.extname(absPath)));
+      const outputPath = path.resolve(`${baseName}.odt`);
+      const convertCommand = `soffice --headless --convert-to fodt ${outputPath} --outdir ${absDir}`
+      exec(convertCommand, (error, stdout, stderr) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        if (stderr) {
+          console.warn(stderr);
+        }
+        const outputPath = path.resolve(`${baseName}.fodt`);
+        fs.readFile(outputPath, 'utf8', (err, data) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          const result = data.replace(/<text:bookmark[^\/]*\/>/g, '');
+
+          fs.writeFile(outputPath, result, 'utf8', (err) => {
+            if (err) {
+              reject(error);
+              return;
+            }
+            resolve(outputPath);
+          });
+        });
+      });
     });
   });
 };
